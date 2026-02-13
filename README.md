@@ -3,9 +3,14 @@ A new Flutter application for Flutter Vietnam UI Challenge #1
 to summarize Covid data around the world.
 
 ### Review
-[![Image](review/ooo.png)](https://res.cloudinary.com/dasdang/video/upload/v1596811207/videos/kovid_overlook/kovid_overlook_demo.mp4)
 
-<img src="https://res.cloudinary.com/dasdang/image/upload/v1596814817/videos/kovid_overlook/ezgif.com-video-to-gif_kpsjvv.gif" />
+| Logo & branding | App screenshot |
+|-----------------|----------------|
+| ![Kovid Overlook logo](review/ooo.png) | ![Kovid Overlook app](review/phone_review.png) |
+
+**Previous demos:**
+- [Video demo](https://res.cloudinary.com/dasdang/video/upload/v1596811207/videos/kovid_overlook/kovid_overlook_demo.mp4)
+- ![GIF demo](https://res.cloudinary.com/dasdang/image/upload/v1596814817/videos/kovid_overlook/ezgif.com-video-to-gif_kpsjvv.gif)
 
 ---
 

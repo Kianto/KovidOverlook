@@ -65,17 +65,17 @@ class SummaryChartState extends State<SummaryChart> {
       {
         "id": 0,
         "percent": widget.report!.deaths / total,
-        "color": Colors.redAccent,
+        "color": Colors.red.shade700,
       },
       {
         "id": 1,
         "percent": widget.report!.recovered / total,
-        "color": Colors.green[600],
+        "color": Colors.green.shade600,
       },
       {
         "id": 2,
         "percent": widget.report!.confirmed / total,
-        "color": Colors.blueAccent,
+        "color": Colors.blue.shade600,
       },
     ];
 
@@ -89,11 +89,11 @@ class SummaryChartState extends State<SummaryChart> {
                         .toStringAsFixed(1) +
                     '%'
                 : '',
-            radius: e['id'] == touchedIndex ? widget.size + 10 : widget.size,
+            radius: e['id'] == touchedIndex ? widget.size + 8 : widget.size,
             titleStyle: TextStyle(
               fontSize:
-                  e['id'] == touchedIndex ? (widget.showPercent ? 20 : 12) : 12,
-              fontWeight: FontWeight.bold,
+                  e['id'] == touchedIndex ? (widget.showPercent ? 18 : 11) : 11,
+              fontWeight: FontWeight.w700,
               color: Colors.white,
             ),
           ),

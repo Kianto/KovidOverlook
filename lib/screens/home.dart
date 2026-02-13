@@ -34,10 +34,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
     _animationCtrler.forward();
 
-    ContinentCollection.getContinentReport('*').then(
-      (value) => setState(() => _selectingContinent = value),
-    );
-    ContinentCollection.initCountryListIntoContinents(context);
+    ContinentCollection.initCountryListIntoContinents(context).then((_) {
+      ContinentCollection.getContinentReport('*').then(
+        (value) => setState(() => _selectingContinent = value),
+      );
+    });
   }
 
   @override
@@ -77,9 +78,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildAppbar(Continent? continent, List<Report> reports) {
+    final theme = Theme.of(context);
     return SliverAppBar(
-      backgroundColor: Colors.grey[200],
-      title: const Text(Constants.appName),
+      backgroundColor: theme.colorScheme.surface,
+      foregroundColor: theme.colorScheme.onSurface,
+      elevation: 0,
+      scrolledUnderElevation: 2,
+      title: Text(
+        Constants.appName,
+        style: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.3,
+        ),
+      ),
       floating: true,
       expandedHeight: MediaQuery.of(context).size.height * 2 / 3,
       flexibleSpace: FlexibleSpaceBar(

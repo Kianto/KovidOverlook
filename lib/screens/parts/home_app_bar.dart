@@ -25,7 +25,7 @@ class HomeAppBar extends StatefulWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  final _carouselController = CarouselController();
+  final _carouselController = CarouselSliderController();
   int _pointer = 0;
 
   @override
@@ -45,55 +45,69 @@ class _HomeAppBarState extends State<HomeAppBar> {
   }
 
   Widget _buildBody() {
-    var continentList = SizedBox(
-      height: 180.0,
-      child: ListView.builder(
-        itemBuilder: (context, index) => ContinentCard(
-          continent: widget.continents[index],
-          onTap: (continent) {
-            widget.onContinentSelected?.call(continent);
-            _carouselController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.linear,
-            );
-          },
-          selected: widget.continent == widget.continents[index],
+    var continentList = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        height: 188,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.continents.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.only(right: 14),
+            child: ContinentCard(
+              continent: widget.continents[index],
+              onTap: (continent) {
+                widget.onContinentSelected?.call(continent);
+                _carouselController.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.linear,
+                );
+              },
+              selected: widget.continent == widget.continents[index],
+            ),
+          ),
         ),
-        itemCount: widget.continents.length,
-        scrollDirection: Axis.horizontal,
       ),
     );
 
-    var summaryList = GridView(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 2 / 1,
+    final theme = Theme.of(context);
+    final surfaceColor = theme.colorScheme.surface;
+
+    var summaryList = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: GridView(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 2 / 1,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        children: [
+          SummaryCard(
+            color: theme.colorScheme.primary.withValues(alpha: 0.85),
+            title: 'Total',
+            number: widget.continent.total.toInt(),
+          ),
+          SummaryCard(
+            color: Colors.blue.shade600,
+            title: 'Confirmed',
+            number: widget.continent.confirmed,
+          ),
+          SummaryCard(
+            color: Colors.green.shade600,
+            title: 'Recovered',
+            number: widget.continent.recovered,
+          ),
+          SummaryCard(
+            color: Colors.red.shade600,
+            title: 'Deaths',
+            number: widget.continent.deaths,
+          ),
+        ],
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
       ),
-      children: [
-        SummaryCard(
-          color: Colors.grey,
-          title: 'Total',
-          number: widget.continent.total.toInt(),
-        ),
-        SummaryCard(
-          color: Colors.blue,
-          title: 'Confirmed',
-          number: widget.continent.confirmed,
-        ),
-        SummaryCard(
-          color: Colors.green,
-          title: 'Recovered',
-          number: widget.continent.recovered,
-        ),
-        SummaryCard(
-          color: Colors.red,
-          title: 'Deaths',
-          number: widget.continent.deaths,
-        ),
-      ],
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
     );
 
     var appContent = Column(
@@ -103,24 +117,29 @@ class _HomeAppBarState extends State<HomeAppBar> {
         Expanded(
           child: Stack(
             children: [
-              Center(
-                child: summaryList,
-              ),
+              Center(child: summaryList),
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 114.0,
-                  width: 114.0,
-                  padding: const EdgeInsets.all(20.0),
+                  height: 124,
+                  width: 124,
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: surfaceColor,
                     shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.shadow.withValues(alpha: 0.12),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
                   ),
                   child: Container(
-                    height: 80.0,
-                    width: 80.0,
-                    decoration: const BoxDecoration(
-                      color: Colors.amber,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.5),
                       shape: BoxShape.circle,
                     ),
                     child: SummaryChart(
@@ -142,9 +161,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 56.0,
-            ),
+            const SizedBox(height: 56.0),
             Expanded(
               child: CarouselSlider(
                 options: CarouselOptions(height: double.infinity),
@@ -155,7 +172,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                             ? const SizedBox()
                             : Image.asset(
                                 i.image!,
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.cover,
                               ),
                       ),
                     )
@@ -165,8 +182,19 @@ class _HomeAppBarState extends State<HomeAppBar> {
             ),
           ],
         ),
-        Container(
-          color: Colors.orangeAccent.withOpacity(0.2),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                theme.colorScheme.surface.withValues(alpha: 0.0),
+                theme.colorScheme.secondary.withValues(alpha: 0.12),
+                theme.colorScheme.surface,
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ),
+          ),
         ),
         appContent,
       ],

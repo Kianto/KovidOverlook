@@ -16,41 +16,53 @@ class SummaryCard extends StatefulWidget {
   final int number;
 
   @override
-  _SummaryCardState createState() => _SummaryCardState();
+  State<SummaryCard> createState() => _SummaryCardState();
 }
 
 class _SummaryCardState extends State<SummaryCard> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Consumer<AnimationNotifier>(
       builder: (context, notifier, child) => Card(
-        child: _buildBody(notifier),
-        color: widget.color?.withOpacity(0.9),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        color: widget.color?.withValues(alpha: 0.92),
+        child: _buildBody(theme, notifier),
       ),
     );
   }
 
-  Widget _buildBody(AnimationNotifier notifier) {
+  Widget _buildBody(ThemeData theme, AnimationNotifier notifier) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: GridTile(
-        footer: AnimatedBuilder(
-          builder: (context, _) => Center(
-            child: Text(
-              DataNumberConverter.convert(widget.number * notifier.value),
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            widget.title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.95),
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
             ),
           ),
-          animation: notifier,
-        ),
-        child: Center(
-          child: Text(
-            widget.title,
-            style: Theme.of(context).textTheme.headlineMedium,
+          const SizedBox(height: 6),
+          AnimatedBuilder(
+            builder: (context, _) => Text(
+              DataNumberConverter.convert(widget.number * notifier.value),
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            animation: notifier,
           ),
-        ),
+        ],
       ),
     );
   }

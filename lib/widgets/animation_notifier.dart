@@ -6,7 +6,7 @@ class AnimationNotifier with ChangeNotifier {
 
   AnimationNotifier(this._animationController)
       : _animation = CurvedAnimation(
-          curve: Curves.bounceInOut,
+          curve: Curves.easeOutCubic,
           parent: _animationController,
         ) {
     _animationController.addListener(() {

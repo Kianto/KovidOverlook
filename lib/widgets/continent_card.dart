@@ -15,41 +15,79 @@ class ContinentCard extends StatefulWidget {
   final bool selected;
 
   @override
-  _ContinentCardState createState() => _ContinentCardState();
+  State<ContinentCard> createState() => _ContinentCardState();
 }
 
 class _ContinentCardState extends State<ContinentCard> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Card(
-        child: Container(
+    final theme = Theme.of(context);
+    final isSelected = widget.selected;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => widget.onTap?.call(widget.continent),
+        borderRadius: BorderRadius.circular(16),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 100,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: widget.selected ? Colors.pink : Colors.white10,
-              width: 2.0,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outline.withValues(alpha: 0.3),
+              width: isSelected ? 2.5 : 1.5,
+            ),
+            boxShadow: [
+              if (isSelected)
+                BoxShadow(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Image.asset(
+                    widget.continent.image ?? Constants.defaultImage,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? theme.colorScheme.primaryContainer
+                            .withValues(alpha: 0.6)
+                        : theme.colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.7),
+                  ),
+                  child: Text(
+                    widget.continent.name ?? '',
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? theme.colorScheme.onPrimaryContainer
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          child: _buildBody(),
-        ),
-        elevation: 2.5,
-      ),
-      onTap: () => widget.onTap?.call(widget.continent),
-    );
-  }
-
-  Widget _buildBody() {
-    return SizedBox(
-      width: 100.0,
-      child: GridTile(
-        child: Image.asset(widget.continent.image ?? Constants.defaultImage),
-        footer: Container(
-          width: double.infinity,
-          child: Center(
-            child: Text(widget.continent.name ?? ''),
-          ),
-          padding: const EdgeInsets.all(4.0),
-          color: Colors.pinkAccent[100],
         ),
       ),
     );
